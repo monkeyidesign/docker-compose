@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  web:
+    ports:
+      - "80:80"
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html/app/public
+    build:
+      context: .
+    container_name: rsam-web
+    volumes:
+      - ./app:/var/www/html/
+      - ./apache/vhost.conf:/etc/apache2/sites-available/00-default.conf
