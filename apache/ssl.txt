@@ -1,0 +1,13 @@
+<VirtualHost *:443>
+ DocumentRoot ${APACHE_DOCUMENT_ROOT}
+ SSLEngine On
+ SSLProxyEngine On
+ SSLCertificateFile "conf/ssl.crt/server.crt"
+ SSLCertificateKeyFile "conf/ssl.key/server.key"
+
+ <Directory ${APACHE_DOCUMENT_ROOT}>
+     Options All
+    AllowOverride All
+    Require all granted
+ </Directory>
+</VirtualHost>

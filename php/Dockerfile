@@ -17,7 +17,6 @@ RUN yes | pecl install xdebug \
     && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
 RUN docker-php-ext-enable xdebug
 
-#RUN chown -R www-data:www-data /var/www/
 
 COPY . /var/www/html/
 CMD echo "ServerName localhost" >> /etc/apache2/apache2.conf
