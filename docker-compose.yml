@@ -1,45 +1,53 @@
-version: '3.1'
+version: '3.8'
 
 services:
   db:
     image: mariadb
-    container_name: rsam-mysql
-    command: --default-authentication-plugin=mysql_native_password
     restart: always
+    container_name: rsam-mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=sam2020
-      - MYSQL_DATABASE=db2020
-      - MYSQL_USER=user2020
-      - MYSQL_PASSWORD=pwd2020
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: db2020
+      MYSQL_USER: user2020
+      MYSQL_PASSWORD: pwd2020
+    volumes:
+      - mysql:/var/lib/mysql
     ports:
-      - 7001:3306
+      - 3306:3306
   web:
     build:
       context: .
       dockerfile: php/Dockerfile
     container_name: rsam-web
     volumes:
-      - ./app:/var/www/html/
+      - ./public_html:/var/www/html/
       - ./apache/vhost.conf:/etc/apache2/sites-available/00-default.conf
       - ./php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
       - ./php/timezone.ini:/usr/local/etc/php/conf.d/timezone.ini
     environment:
-      - APACHE_DOCUMENT_ROOT=/var/www/html/app/public
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public_html/public
     depends_on:
       - db
     ports:
-      - 7000:80
-  phpmyadmin:
-    hostname: rsam-phpmyadmin
-    container_name: rsam-phpmyadmin
-    image: phpmyadmin/phpmyadmin
-    environment:
-      MYSQL_ROOT_PASSWORD: sam2020
-      MYSQL_USER: user2020
-      MYSQL_PASSWORD: pwd2020
-    links:
-      - db:db
-    depends_on:
-      - db
-    ports:
-      - 7002:80
+      - 80:80
+      - 443:443
+volumes:
+  mysql:
+
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin
+#    hostname: rsam-phpmyadmin
+#    container_name: rsam-phpmyadmin
+#    environment:
+#      MYSQL_ROOT_PASSWORD: sam2020
+#      MYSQL_USER: user2020
+#      MYSQL_PASSWORD: pwd2020
+#    restart: always
+#    links:
+#      - db:db
+#    depends_on:
+#      - db
+#    ports:
+#      - 8080:8080
+#    volumes:
+#      - /sessions
